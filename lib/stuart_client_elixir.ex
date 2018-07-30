@@ -26,7 +26,9 @@ defmodule StuartClientElixir do
       def perform_get(resource, config) do
         HTTPoison.get!(
           "#{config.environment.base_url}#{resource}",
-          default_headers(access_token: access_token(config.environment, config.client_id, config.client_secret))
+          default_headers(
+            access_token: access_token(config.environment, config.client_id, config.client_secret)
+          )
         )
         |> to_api_response
       end
