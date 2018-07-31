@@ -1,21 +1,4 @@
 defmodule StuartClientElixir do
-  @moduledoc """
-  Documentation for StuartClientElixir.
-  """
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> StuartClientElixir.hello()
-      :world
-
-  """
-  def hello do
-    :world
-  end
-
   defmodule Infrastructure do
     defmodule Environment do
       def sandbox, do: %{base_url: "https://sandbox-api.stuart.com"}
@@ -24,14 +7,26 @@ defmodule StuartClientElixir do
 
     defmodule HttpClient do
       def perform_get(resource, config) do
-        HTTPoison.get!(
-          "#{config.environment.base_url}#{resource}",
+        HTTPoison.get(
+          url(resource, config),
           default_headers(
-            access_token: access_token(config.environment, config.client_id, config.client_secret)
+            access_token(config.environment, config.client_id, config.client_secret)
           )
         )
         |> to_api_response
       end
+
+      def perform_post(resource, body, config) do
+        HTTPoison.post(
+          url(resource, config),
+          body,
+          default_headers(
+            access_token(config.environment, config.client_id, config.client_secret)
+          )
+        )
+      end
+
+      defp url(resource, config), do: "#{config.environment.base_url}#{resource}"
 
       defp access_token(environment, client_id, client_secret) do
         StuartClientElixir.Infrastructure.Authenticator.access_token(
@@ -41,14 +36,15 @@ defmodule StuartClientElixir do
         )
       end
 
-      defp default_headers(access_token: access_token) do
+      defp default_headers(access_token) do
         [
           Authorization: "Bearer #{access_token}",
-          "User-Agent": "stuart-client-elixir/#{Mix.Project.config()[:version]}"
+          "User-Agent": "stuart-client-elixir/#{Mix.Project.config()[:version]}",
+          "Content-Type": "application/json"
         ]
       end
 
-      defp to_api_response(%HTTPoison.Response{status_code: status_code, body: body}) do
+      defp to_api_response({:ok, %HTTPoison.Response{status_code: status_code, body: body}} ) do
         %{status_code: status_code, body: Jason.decode!(body)}
       end
     end
