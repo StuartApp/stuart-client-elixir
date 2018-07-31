@@ -27,7 +27,9 @@ defmodule StuartClientElixir.MixProject do
       {:jason, "~> 1.0"},
       {:httpoison, "~> 0.13.0"},
       {:oauth2, "~> 0.9"},
-      {:poison, "~> 4.0"}
+      {:poison, "~> 4.0"},
+      {:mox, "~> 0.3", only: :test},
+      {:mock, "~> 0.3.1", only: :test}
     ]
   end
 end
