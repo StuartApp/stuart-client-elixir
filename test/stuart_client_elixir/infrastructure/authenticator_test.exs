@@ -1,0 +1,3 @@
+defmodule StuartClientElixirTest.Infrastructure.AuthenticatorTest do
+
+end

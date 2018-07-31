@@ -15,7 +15,8 @@ defmodule StuartClientElixir.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      applications: [:oauth2, :httpoison]
+      applications: [:oauth2, :httpoison, :cachex],
+      mod: {StuartClientElixir.Application, []}
     ]
   end
 
@@ -28,6 +29,7 @@ defmodule StuartClientElixir.MixProject do
       {:httpoison, "~> 0.13.0"},
       {:oauth2, "~> 0.9"},
       {:poison, "~> 4.0"},
+      {:cachex, "~> 3.0"},
       {:mox, "~> 0.3", only: :test},
       {:mock, "~> 0.3.1", only: :test}
     ]
