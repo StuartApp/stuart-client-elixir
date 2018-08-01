@@ -17,10 +17,10 @@ defmodule StuartClientElixirTest.Infrastructure.HttpClientTest do
       [],
       [
         get: fn _, _ ->
-          {:ok, %HTTPoison.Response{status_code: 201, body: Jason.encode!(%{sample: "response"})}}
+          {:ok, %HTTPoison.Response{status_code: 201, body: Poison.encode!(%{sample: "response"})}}
         end,
         post: fn _, _, _ ->
-          {:ok, %HTTPoison.Response{status_code: 201, body: Jason.encode!(%{sample: "response"})}}
+          {:ok, %HTTPoison.Response{status_code: 201, body: Poison.encode!(%{sample: "response"})}}
         end
       ]
     }
@@ -65,7 +65,7 @@ defmodule StuartClientElixirTest.Infrastructure.HttpClientTest do
     end
   end
 
-  defp sample_request_body, do: Jason.encode!(%{sample: "request"})
+  defp sample_request_body, do: Poison.encode!(%{sample: "request"})
 
   defp expected_headers,
     do: [
