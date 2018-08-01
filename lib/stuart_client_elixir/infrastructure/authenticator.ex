@@ -1,8 +1,9 @@
 defmodule StuartClientElixir.Infrastructure.Authenticator do
   def access_token(environment, client_id, client_secret) do
-    if has_valid_token?(client_id),
-      do: token_from_cache(client_id).token.access_token,
-      else: new_access_token(environment, client_id, client_secret).token.access_token
+    case has_valid_token?(client_id) do
+      true -> token_from_cache(client_id).token.access_token
+      false -> new_access_token(environment, client_id, client_secret).token.access_token
+    end
   end
 
   defp new_access_token(environment, client_id, client_secret) do
@@ -14,7 +15,7 @@ defmodule StuartClientElixir.Infrastructure.Authenticator do
     cache_exists(client_id) && !OAuth2.AccessToken.expired?(token_from_cache(client_id).token)
   end
 
-  defp oauth_client(site, client_id, client_secret) do
+  def oauth_client(site, client_id, client_secret) do
     OAuth2.Client.new(
       strategy: OAuth2.Strategy.ClientCredentials,
       client_id: client_id,

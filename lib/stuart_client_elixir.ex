@@ -1,3 +1,2 @@
 defmodule StuartClientElixir do
-  
 end
