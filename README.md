@@ -13,7 +13,7 @@ end
 
 def deps do
   [
-    {:stuart_client_elixir, "~> 1.0.0"}
+    {:stuart_client_elixir, "~> 1.0.1"}
   ]
 end
 ```
