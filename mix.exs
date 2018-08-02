@@ -34,7 +34,7 @@ defmodule StuartClientElixir.MixProject do
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
       {:httpoison, "~> 0.13.0"},
       {:oauth2, "~> 0.9"},
-      {:poison, "~> 4.0"},
+      {:jason, "~> 1.1"},
       {:cachex, "~> 3.0"},
       {:mox, "~> 0.3", only: :test},
       {:mock, "~> 0.3.1", only: :test}
