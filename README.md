@@ -69,5 +69,5 @@ job = %{
 }
 config = %{environment: Environment.sandbox(), client_id: "c6058849d0a056fc743203acb8e6a8...85c3edc51b16a9260cc7a7688", client_secret: "aa6a415fce31967501662c1960fcbfb...9acb19dbc1aae6f76c9c619"}
 
-HttpClient.perform_post "/v2/jobs", Poison.encode!(job), config
+HttpClient.perform_post "/v2/jobs", Jason.encode!(job), config
 
