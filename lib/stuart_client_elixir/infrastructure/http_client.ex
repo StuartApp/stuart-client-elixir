@@ -34,6 +34,6 @@ defmodule StuartClientElixir.Infrastructure.HttpClient do
   end
 
   defp to_api_response({:ok, %HTTPoison.Response{status_code: status_code, body: body}}) do
-    %{status_code: status_code, body: Poison.decode!(body)}
+    %{status_code: status_code, body: Jason.decode!(body)}
   end
 end
