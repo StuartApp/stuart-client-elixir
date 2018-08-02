@@ -1,6 +1,6 @@
 defmodule StuartClientElixirTest.Infrastructure.HttpClientTest do
   use ExUnit.Case
-  
+
   import Mock
   alias StuartClientElixir.Infrastructure.{Authenticator, HttpClient, Environment}
 
@@ -17,10 +17,12 @@ defmodule StuartClientElixirTest.Infrastructure.HttpClientTest do
       [],
       [
         get: fn _, _ ->
-          {:ok, %HTTPoison.Response{status_code: 201, body: Poison.encode!(%{sample: "response"})}}
+          {:ok,
+           %HTTPoison.Response{status_code: 201, body: Poison.encode!(%{sample: "response"})}}
         end,
         post: fn _, _, _ ->
-          {:ok, %HTTPoison.Response{status_code: 201, body: Poison.encode!(%{sample: "response"})}}
+          {:ok,
+           %HTTPoison.Response{status_code: 201, body: Poison.encode!(%{sample: "response"})}}
         end
       ]
     }
@@ -30,12 +32,13 @@ defmodule StuartClientElixirTest.Infrastructure.HttpClientTest do
 
   describe "perform_get" do
     test "calls HTTPoison with correct parameters" do
-    OAuth2.Client.new(
-				strategy: OAuth2.Strategy.ClientCredentials,
-				client_id: "sample-client-id",
-				client_secret: "sample-client-id",
-				site: Environment.sandbox().base_url
-			)
+      OAuth2.Client.new(
+        strategy: OAuth2.Strategy.ClientCredentials,
+        client_id: "sample-client-id",
+        client_secret: "sample-client-id",
+        site: Environment.sandbox().base_url
+      )
+
       # given
       HttpClient.perform_get("/sample-endpoint", config())
 
