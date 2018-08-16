@@ -1,3 +1,5 @@
+[ ![Codeship Status for StuartApp/stuart-client-elixir](https://app.codeship.com/projects/832b17c0-77a6-0136-8b5b-3e7b2f9f0830/status?branch=master)](https://app.codeship.com/projects/300202)
+
 # Stuart Elixir Client
 
 For a complete documentation of all endpoints offered by the Stuart API, you can visit [Stuart API documentation](https://stuart.api-docs.io).
