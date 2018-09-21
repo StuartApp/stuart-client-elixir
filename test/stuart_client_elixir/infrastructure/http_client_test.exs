@@ -30,13 +30,6 @@ defmodule StuartClientElixirTest.Infrastructure.HttpClientTest do
 
   describe "get" do
     test "calls HTTPoison with correct parameters" do
-      # OAuth2.Client.new(
-      #  strategy: OAuth2.Strategy.ClientCredentials,
-      #  client_id: "sample-client-id",
-      #  client_secret: "sample-client-id",
-      #  site: Environment.sandbox().base_url
-      # )
-
       # given
       HttpClient.get("/sample-endpoint", %{
         environment: Environment.sandbox(),
