@@ -25,18 +25,18 @@ end
 #### Send a GET request to the Stuart API
 
 ```elixir
-alias StuartClientElixir.{HttpClient, Environment, Credentials}
+alias StuartClientElixir.{Environment, Credentials}
 
 credentials = %Credentials{client_id: "...", client_secret: "..."}
 
-HttpClient.get(
+StuartClientElixir.get(
   "/v2/jobs/95896", %{environment: Environment.sandbox(), credentials: credentials})
 ```
 
 #### Send a POST request to the Stuart API
 
 ```elixir
-alias StuartClientElixir.{HttpClient, Environment}
+alias StuartClientElixir.{Environment, Credentials}
 
 job = %{
   job: %{
@@ -70,5 +70,5 @@ job = %{
 }
 credentials = %Credentials{client_id: "...", client_secret: "..."}
 
-HttpClient.post("/v2/jobs", Jason.encode!(job), %{environment: Environment.sandbox(), credentials: credentials})
+StuartClientElixir.post("/v2/jobs", Jason.encode!(job), %{environment: Environment.sandbox(), credentials: credentials})
 ```
