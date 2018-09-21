@@ -25,7 +25,7 @@ end
 #### Send a GET request to the Stuart API
 
 ```elixir
-alias StuartClientElixir.Infrastructure.{HttpClient, Environment, Credentials}
+alias StuartClientElixir.{HttpClient, Environment, Credentials}
 
 credentials = %Credentials{client_id: "...", client_secret: "..."}
 
@@ -36,7 +36,7 @@ HttpClient.get(
 #### Send a POST request to the Stuart API
 
 ```elixir
-alias StuartClientElixir.Infrastructure.{HttpClient, Environment}
+alias StuartClientElixir.{HttpClient, Environment}
 
 job = %{
   job: %{

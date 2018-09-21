@@ -1,7 +1,7 @@
-defmodule StuartClientElixirTest.Infrastructure.EnvironmentTest do
+defmodule StuartClientElixirTest.EnvironmentTest do
   use ExUnit.Case
 
-  alias StuartClientElixir.Infrastructure.Environment
+  alias StuartClientElixir.Environment
 
   test "sandbox" do
     assert Environment.sandbox() == %Environment{base_url: "https://sandbox-api.stuart.com"}

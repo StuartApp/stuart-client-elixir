@@ -1,5 +1,5 @@
-defmodule StuartClientElixir.Infrastructure.Authenticator do
-  alias StuartClientElixir.Infrastructure.{Environment, Credentials}
+defmodule StuartClientElixir.Authenticator do
+  alias StuartClientElixir.{Environment, Credentials}
 
   def access_token(%Environment{} = environment, %Credentials{} = credentials) do
     case has_valid_token?(credentials) do

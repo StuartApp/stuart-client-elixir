@@ -1,9 +1,9 @@
-defmodule StuartClientElixirTest.Infrastructure.AuthenticatorTest do
+defmodule StuartClientElixirTest.AuthenticatorTest do
   use ExUnit.Case
 
   import Mock
 
-  alias StuartClientElixir.Infrastructure.{Authenticator, Environment, Credentials}
+  alias StuartClientElixir.{Authenticator, Environment, Credentials}
 
   setup do
     on_exit(fn ->

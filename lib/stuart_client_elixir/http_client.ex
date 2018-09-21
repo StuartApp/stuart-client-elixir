@@ -1,5 +1,5 @@
-defmodule StuartClientElixir.Infrastructure.HttpClient do
-  alias StuartClientElixir.Infrastructure.{Environment, Authenticator}
+defmodule StuartClientElixir.HttpClient do
+  alias StuartClientElixir.{Environment, Authenticator}
 
   def get(resource, %{environment: environment, credentials: credentials}) do
     with url <- url(resource, environment),

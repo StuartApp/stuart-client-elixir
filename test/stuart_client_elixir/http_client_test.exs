@@ -1,8 +1,8 @@
-defmodule StuartClientElixirTest.Infrastructure.HttpClientTest do
+defmodule StuartClientElixirTest.HttpClientTest do
   use ExUnit.Case
 
   import Mock
-  alias StuartClientElixir.Infrastructure.{Authenticator, HttpClient, Environment, Credentials}
+  alias StuartClientElixir.{Authenticator, HttpClient, Environment, Credentials}
 
   setup_with_mocks([
     {

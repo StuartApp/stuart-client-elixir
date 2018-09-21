@@ -1,4 +1,4 @@
-defmodule StuartClientElixir.Infrastructure.Queue do
+defmodule StuartClientElixir.Queue do
   use GenServer
 
   def start_link() do

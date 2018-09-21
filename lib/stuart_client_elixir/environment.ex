@@ -1,4 +1,4 @@
-defmodule StuartClientElixir.Infrastructure.Environment do
+defmodule StuartClientElixir.Environment do
   @enforce_keys [:base_url]
   defstruct @enforce_keys
 
