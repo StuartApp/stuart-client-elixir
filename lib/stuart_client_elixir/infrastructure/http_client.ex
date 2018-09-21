@@ -1,29 +1,29 @@
 defmodule StuartClientElixir.Infrastructure.HttpClient do
-  def perform_get(resource, config) do
-    HTTPoison.get(
-      url(resource, config),
-      default_headers(access_token(config.environment, config.client_id, config.client_secret))
-    )
-    |> to_api_response
+  alias StuartClientElixir.Infrastructure.{Environment, Authenticator}
+
+  def perform_get(resource, %{environment: environment, credentials: credentials}) do
+    with url <- url(resource, environment),
+         access_token <- Authenticator.access_token(environment, credentials),
+         headers <- default_headers(access_token) do
+      HTTPoison.get(url, headers)
+      |> to_api_response()
+    end
   end
 
-  def perform_post(resource, body, config) do
-    HTTPoison.post(
-      url(resource, config),
-      body,
-      default_headers(access_token(config.environment, config.client_id, config.client_secret))
-    )
+  def perform_post(resource, body, %{environment: environment, credentials: credentials}) do
+    with url <- url(resource, environment),
+         access_token <- Authenticator.access_token(environment, credentials),
+         headers <- default_headers(access_token) do
+      HTTPoison.post(url, body, headers)
+      |> to_api_response()
+    end
   end
 
-  defp url(resource, config), do: "#{config.environment.base_url}#{resource}"
+  #####################
+  # Private functions #
+  #####################
 
-  defp access_token(environment, client_id, client_secret) do
-    StuartClientElixir.Infrastructure.Authenticator.access_token(
-      environment,
-      client_id,
-      client_secret
-    )
-  end
+  defp url(resource, %Environment{base_url: base_url}), do: "#{base_url}#{resource}"
 
   defp default_headers(access_token) do
     [

@@ -3,7 +3,7 @@ defmodule StuartClientElixirTest.Infrastructure.AuthenticatorTest do
 
   import Mock
 
-  alias StuartClientElixir.Infrastructure.{Authenticator, Environment}
+  alias StuartClientElixir.Infrastructure.{Authenticator, Environment, Credentials}
 
   setup do
     on_exit(fn ->
@@ -32,8 +32,7 @@ defmodule StuartClientElixirTest.Infrastructure.AuthenticatorTest do
   describe "access_token" do
     test "returns a new access token when no access token exists" do
       # when
-      access_token =
-        Authenticator.access_token(Environment.sandbox(), "client-id", "client-secret")
+      access_token = Authenticator.access_token(Environment.sandbox(), sample_credentials())
 
       # then
       assert access_token == "sample-new-token"
@@ -51,8 +50,7 @@ defmodule StuartClientElixirTest.Infrastructure.AuthenticatorTest do
       )
 
       # when
-      access_token =
-        Authenticator.access_token(Environment.sandbox(), "client-id", "client-secret")
+      access_token = Authenticator.access_token(Environment.sandbox(), sample_credentials())
 
       # then
       assert access_token == "sample-cached-token"
@@ -70,19 +68,26 @@ defmodule StuartClientElixirTest.Infrastructure.AuthenticatorTest do
       )
 
       # when
-      access_token =
-        Authenticator.access_token(Environment.sandbox(), "client-id", "client-secret")
+      access_token = Authenticator.access_token(Environment.sandbox(), sample_credentials())
 
       # then
       assert access_token == "sample-new-token"
     end
   end
 
+  #####################
+  # Private functions #
+  #####################
+
+  defp sample_credentials do
+    %Credentials{client_id: "client-id", client_secret: "client-secret"}
+  end
+
   defp sample_client do
     %OAuth2.Client{
       authorize_url: "/oauth/authorize",
-      client_id: "client-id",
-      client_secret: "client-secret",
+      client_id: sample_credentials().client_id,
+      client_secret: sample_credentials().client_secret,
       headers: [],
       params: %{},
       redirect_uri: "",
@@ -98,8 +103,8 @@ defmodule StuartClientElixirTest.Infrastructure.AuthenticatorTest do
   defp sample_client_with_token(access_token: access_token, expires_at: expires_at) do
     %OAuth2.Client{
       authorize_url: "/oauth/authorize",
-      client_id: "client-id",
-      client_secret: "client-secret",
+      client_id: sample_credentials().client_id,
+      client_secret: sample_credentials().client_secret,
       headers: [],
       params: %{},
       redirect_uri: "",

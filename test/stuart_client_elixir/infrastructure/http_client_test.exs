@@ -2,14 +2,14 @@ defmodule StuartClientElixirTest.Infrastructure.HttpClientTest do
   use ExUnit.Case
 
   import Mock
-  alias StuartClientElixir.Infrastructure.{Authenticator, HttpClient, Environment}
+  alias StuartClientElixir.Infrastructure.{Authenticator, HttpClient, Environment, Credentials}
 
   setup_with_mocks([
     {
       Authenticator,
       [],
       [
-        access_token: fn _, _, _ -> "sample-access-token" end
+        access_token: fn _environment, _credentials -> "sample-access-token" end
       ]
     },
     {
@@ -30,15 +30,18 @@ defmodule StuartClientElixirTest.Infrastructure.HttpClientTest do
 
   describe "perform_get" do
     test "calls HTTPoison with correct parameters" do
-      OAuth2.Client.new(
-        strategy: OAuth2.Strategy.ClientCredentials,
-        client_id: "sample-client-id",
-        client_secret: "sample-client-id",
-        site: Environment.sandbox().base_url
-      )
+      # OAuth2.Client.new(
+      #  strategy: OAuth2.Strategy.ClientCredentials,
+      #  client_id: "sample-client-id",
+      #  client_secret: "sample-client-id",
+      #  site: Environment.sandbox().base_url
+      # )
 
       # given
-      HttpClient.perform_get("/sample-endpoint", config())
+      HttpClient.perform_get("/sample-endpoint", %{
+        environment: Environment.sandbox(),
+        credentials: sample_credentials()
+      })
 
       # then
       assert called(
@@ -66,6 +69,17 @@ defmodule StuartClientElixirTest.Infrastructure.HttpClientTest do
     end
   end
 
+  #####################
+  # Private functions #
+  #####################
+
+  defp sample_credentials do
+    %Credentials{
+      client_id: "sample-client-id",
+      client_secret: "sample-client-secret"
+    }
+  end
+
   defp sample_request_body, do: Jason.encode!(%{sample: "request"})
 
   defp expected_headers,
@@ -78,7 +92,6 @@ defmodule StuartClientElixirTest.Infrastructure.HttpClientTest do
   defp config,
     do: %{
       environment: Environment.sandbox(),
-      client_id: "c6058849d0a056fc743203acb8e6a850dad103485c3edc51b16a9260cc7a7688",
-      client_secret: "aa6a415fce31967501662c1960fcbfbf4745acff99acb19dbc1aae6f76c9c619"
+      credentials: sample_credentials()
     }
 end
