@@ -29,7 +29,7 @@ alias StuartClientElixir.Infrastructure.{HttpClient, Environment}
 
 config = %{environment: Environment.sandbox(), client_id: "c6058849d0a056fc743203acb...103485c3edc51b16a9260cc7a7688", client_secret: "aa6a415fce31967501662c1960f...cff99acb19dbc1aae6f76c9c619"}
 
-HttpClient.perform_get "/v2/jobs/95896", config
+HttpClient.get "/v2/jobs/95896", config
 ```
 
 #### Send a POST request to the Stuart API
@@ -69,5 +69,5 @@ job = %{
 }
 config = %{environment: Environment.sandbox(), client_id: "c6058849d0a056fc743203acb8e6a850dad103485c3edc51b16a9260cc7a7688", client_secret: "aa6a415fce31967501662c1960fcbfbf4745acff99acb19dbc1aae6f76c9c619"}
 
-HttpClient.perform_post "/v2/jobs", Jason.encode!(job), config
+HttpClient.post "/v2/jobs", Jason.encode!(job), config
 

@@ -1,7 +1,7 @@
 defmodule StuartClientElixir.Infrastructure.HttpClient do
   alias StuartClientElixir.Infrastructure.{Environment, Authenticator}
 
-  def perform_get(resource, %{environment: environment, credentials: credentials}) do
+  def get(resource, %{environment: environment, credentials: credentials}) do
     with url <- url(resource, environment),
          access_token <- Authenticator.access_token(environment, credentials),
          headers <- default_headers(access_token) do
@@ -10,7 +10,7 @@ defmodule StuartClientElixir.Infrastructure.HttpClient do
     end
   end
 
-  def perform_post(resource, body, %{environment: environment, credentials: credentials}) do
+  def post(resource, body, %{environment: environment, credentials: credentials}) do
     with url <- url(resource, environment),
          access_token <- Authenticator.access_token(environment, credentials),
          headers <- default_headers(access_token) do

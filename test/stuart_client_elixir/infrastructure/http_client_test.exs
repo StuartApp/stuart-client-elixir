@@ -28,7 +28,7 @@ defmodule StuartClientElixirTest.Infrastructure.HttpClientTest do
     :ok
   end
 
-  describe "perform_get" do
+  describe "get" do
     test "calls HTTPoison with correct parameters" do
       # OAuth2.Client.new(
       #  strategy: OAuth2.Strategy.ClientCredentials,
@@ -38,7 +38,7 @@ defmodule StuartClientElixirTest.Infrastructure.HttpClientTest do
       # )
 
       # given
-      HttpClient.perform_get("/sample-endpoint", %{
+      HttpClient.get("/sample-endpoint", %{
         environment: Environment.sandbox(),
         credentials: sample_credentials()
       })
@@ -53,10 +53,10 @@ defmodule StuartClientElixirTest.Infrastructure.HttpClientTest do
     end
   end
 
-  describe "perform_post" do
+  describe "post" do
     test "calls HTTPoison with correct parameters" do
       # when
-      HttpClient.perform_post("/sample-endpoint", sample_request_body(), config())
+      HttpClient.post("/sample-endpoint", sample_request_body(), config())
 
       # then
       assert called(
