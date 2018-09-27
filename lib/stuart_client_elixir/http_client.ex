@@ -1,6 +1,15 @@
 defmodule StuartClientElixir.HttpClient do
   alias StuartClientElixir.{Environment, Authenticator}
 
+  @typep url :: binary()
+  @typep body :: map()
+  @typep options :: map()
+  @typep ok_response :: {:ok, map()}
+  @typep error_response :: {:error, binary() | map()}
+
+  @callback get(url, options) :: ok_response | error_response
+  @callback post(url, body, options) :: ok_response | error_response
+
   def get(resource, %{environment: environment, credentials: credentials}) do
     with url <- url(resource, environment),
          access_token <- Authenticator.access_token(environment, credentials),
