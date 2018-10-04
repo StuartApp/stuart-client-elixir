@@ -1,10 +1,19 @@
 defmodule StuartClientElixir.Authenticator do
   alias StuartClientElixir.{Environment, Credentials}
 
+  @typep access_token :: binary()
+  @typep environment :: map()
+  @typep credentials :: map()
+  @typep ok_response :: {:ok, access_token()}
+  @typep error_response :: {:error, map()}
+
+  @callback access_token(environment(), credentials()) :: ok_response | error_response
+
   def access_token(%Environment{} = environment, %Credentials{} = credentials) do
-    case has_valid_token?(credentials) do
-      true -> token_from_cache(credentials).token.access_token
-      false -> new_access_token(environment, credentials).token.access_token
+    if has_valid_token?(credentials) do
+      access_token_from_cache!(credentials)
+    else
+      new_access_token(environment, credentials)
     end
   end
 
@@ -13,14 +22,18 @@ defmodule StuartClientElixir.Authenticator do
   #####################
 
   defp new_access_token(%Environment{base_url: base_url}, %Credentials{} = credentials) do
-    base_url
-    |> oauth_client(credentials)
-    |> OAuth2.Client.get_token!()
-    |> add_to_cache()
+    with oauth_client <- oauth_client(base_url, credentials),
+         {:ok, %OAuth2.Client{client_id: client_id, token: token}} <-
+           OAuth2.Client.get_token(oauth_client),
+         {:ok, %OAuth2.AccessToken{access_token: access_token}} <- add_to_cache(client_id, token) do
+      {:ok, access_token}
+    else
+      {:error, %OAuth2.Response{} = oauth_response} -> {:error, oauth_response}
+    end
   end
 
-  defp has_valid_token?(client_id) do
-    cache_exists(client_id) && !OAuth2.AccessToken.expired?(token_from_cache(client_id).token)
+  defp has_valid_token?(%Credentials{} = credentials) do
+    cache_exists?(credentials) && !OAuth2.AccessToken.expired?(token_from_cache(credentials))
   end
 
   def oauth_client(site, %Credentials{client_id: client_id, client_secret: client_secret}) do
@@ -32,22 +45,22 @@ defmodule StuartClientElixir.Authenticator do
     )
   end
 
-  defp cache_exists(%Credentials{client_id: client_id}) do
-    case Cachex.exists?(:stuart_oauth_tokens, client_id) do
-      {:ok, false} -> false
-      _ -> true
-    end
-  end
+  defp cache_exists?(%Credentials{client_id: client_id}),
+    do: {:ok, true} == Cachex.exists?(:stuart_oauth_tokens, client_id)
+
+  defp access_token_from_cache!(%Credentials{} = credentials),
+    do: {:ok, token_from_cache(credentials).access_token}
 
   defp token_from_cache(%Credentials{client_id: client_id}) do
     case Cachex.get(:stuart_oauth_tokens, client_id) do
       {:ok, nil} -> nil
-      {:ok, token} -> token
+      {:ok, %OAuth2.AccessToken{} = token} -> token
     end
   end
 
-  defp add_to_cache(oauth2_token) do
-    Cachex.put(:stuart_oauth_tokens, oauth2_token.client_id, oauth2_token)
-    oauth2_token
+  defp add_to_cache(client_id, %OAuth2.AccessToken{} = oauth2_token) do
+    {:ok, true} = Cachex.put(:stuart_oauth_tokens, client_id, oauth2_token)
+
+    {:ok, oauth2_token}
   end
 end

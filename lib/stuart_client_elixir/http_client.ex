@@ -12,7 +12,7 @@ defmodule StuartClientElixir.HttpClient do
 
   def get(resource, %{environment: environment, credentials: credentials}) do
     with url <- url(resource, environment),
-         access_token <- Authenticator.access_token(environment, credentials),
+         {:ok, access_token} <- Authenticator.access_token(environment, credentials),
          headers <- default_headers(access_token) do
       HTTPoison.get(url, headers)
       |> to_api_response()
@@ -21,7 +21,7 @@ defmodule StuartClientElixir.HttpClient do
 
   def post(resource, body, %{environment: environment, credentials: credentials}) do
     with url <- url(resource, environment),
-         access_token <- Authenticator.access_token(environment, credentials),
+         {:ok, access_token} <- Authenticator.access_token(environment, credentials),
          headers <- default_headers(access_token) do
       HTTPoison.post(url, body, headers)
       |> to_api_response()
