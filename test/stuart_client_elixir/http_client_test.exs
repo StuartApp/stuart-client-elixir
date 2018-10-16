@@ -9,7 +9,7 @@ defmodule StuartClientElixirTest.HttpClientTest do
       Authenticator,
       [],
       [
-        access_token: fn _environment, _credentials -> "sample-access-token" end
+        access_token: fn _environment, _credentials -> {:ok, "sample-access-token"} end
       ]
     },
     {
