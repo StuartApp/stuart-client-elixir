@@ -1,6 +1,8 @@
 defmodule StuartClientElixir.MixProject do
   use Mix.Project
 
+  def version, do: "1.0.0"
+
   def project do
     [
       app: :stuart_client_elixir,
@@ -11,7 +13,7 @@ defmodule StuartClientElixir.MixProject do
           "GitHub" => "https://github.com/StuartApp/stuart-client-elixir"
         }
       },
-      version: "1.0.0",
+      version: version(),
       elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
       deps: deps()
