@@ -37,7 +37,7 @@ defmodule StuartClientElixir.HttpClient do
   defp default_headers(access_token) do
     [
       Authorization: "Bearer #{access_token}",
-      "User-Agent": "stuart-client-elixir/#{Mix.Project.config()[:version]}",
+      "User-Agent": "stuart-client-elixir/#{Application.spec(:stuart_client_elixir, :vsn)}",
       "Content-Type": "application/json"
     ]
   end
