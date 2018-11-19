@@ -16,6 +16,8 @@ defmodule StuartClientElixir.HttpClient do
          headers <- default_headers(access_token) do
       HTTPoison.get(url, headers)
       |> to_api_response()
+    else
+      {:error, %OAuth2.Response{}} = oauth_error -> to_api_response(oauth_error)
     end
   end
 
@@ -25,6 +27,8 @@ defmodule StuartClientElixir.HttpClient do
          headers <- default_headers(access_token) do
       HTTPoison.post(url, body, headers)
       |> to_api_response()
+    else
+      {:error, %OAuth2.Response{}} = oauth_error -> to_api_response(oauth_error)
     end
   end
 
@@ -44,5 +48,9 @@ defmodule StuartClientElixir.HttpClient do
 
   defp to_api_response({:ok, %HTTPoison.Response{status_code: status_code, body: body}}) do
     %{status_code: status_code, body: Jason.decode!(body)}
+  end
+
+  defp to_api_response({:error, %OAuth2.Response{status_code: status_code, body: body}}) do
+    %{status_code: status_code, body: body}
   end
 end
