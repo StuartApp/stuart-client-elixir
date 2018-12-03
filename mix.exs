@@ -35,7 +35,7 @@ defmodule StuartClientElixir.MixProject do
       {:httpoison, "~> 1.3.1"},
       {:oauth2, "~> 0.9.3"},
       {:jason, "~> 1.1.1"},
-      {:cachex, "~> 3.0.3"},
+      {:cachex, "~> 3.1"},
       {:mox, "~> 0.4.0", only: :test},
       {:mock, "~> 0.3.2", only: :test}
     ]
