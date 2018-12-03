@@ -17,6 +17,10 @@ defmodule StuartClientElixir.Authenticator do
     end
   end
 
+  def forget_token!(client_id) do
+    remove_from_cache(client_id)
+  end
+
   #####################
   # Private functions #
   #####################
@@ -62,5 +66,9 @@ defmodule StuartClientElixir.Authenticator do
     {:ok, true} = Cachex.put(:stuart_oauth_tokens, client_id, oauth2_token)
 
     {:ok, oauth2_token}
+  end
+
+  defp remove_from_cache(client_id) do
+    {:ok, _} = Cachex.del(:stuart_oauth_tokens, client_id)
   end
 end

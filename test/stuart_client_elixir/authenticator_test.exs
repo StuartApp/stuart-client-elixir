@@ -88,6 +88,27 @@ defmodule StuartClientElixirTest.AuthenticatorTest do
     end
   end
 
+  describe "forget_token!" do
+    test "deletes the cached token for the given client_id" do
+      Cachex.put(
+        :stuart_oauth_tokens,
+        "client-id",
+        sample_token(
+          access_token: "sample-cached-token",
+          expires_at: System.system_time(:second) + 60 * 60
+        )
+      )
+
+      assert {:ok, "sample-cached-token"} ==
+               Authenticator.access_token(Environment.sandbox(), good_credentials())
+
+      assert {:ok, true} == Authenticator.forget_token!("client-id")
+
+      assert {:ok, "sample-new-token"} ==
+               Authenticator.access_token(Environment.sandbox(), good_credentials())
+    end
+  end
+
   #####################
   # Private functions #
   #####################
