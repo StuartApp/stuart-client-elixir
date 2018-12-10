@@ -26,8 +26,8 @@ defmodule StuartClientElixirTest.HttpClientTest do
       HTTPoison,
       [],
       [
-        get: fn url, _ -> get_response(url) end,
-        post: fn url, _, _ -> post_response(url) end
+        get: fn url, _ -> response(:get, url) end,
+        post: fn url, _, _ -> response(:post, url) end
       ]
     }
   ]) do
@@ -95,19 +95,19 @@ defmodule StuartClientElixirTest.HttpClientTest do
   # Private functions #
   #####################
 
-  defp get_response("https://sandbox-api.stuart.com/timeout") do
+  defp response(:get, "https://sandbox-api.stuart.com/timeout") do
     {:error, %HTTPoison.Error{id: nil, reason: :timeout}}
   end
 
-  defp get_response(_) do
+  defp response(:get, _) do
     {:ok, %HTTPoison.Response{status_code: 201, body: Jason.encode!(%{sample: "get response"})}}
   end
 
-  defp post_response("https://sandbox-api.stuart.com/timeout") do
+  defp response(:post, "https://sandbox-api.stuart.com/timeout") do
     {:error, %HTTPoison.Error{id: nil, reason: :timeout}}
   end
 
-  defp post_response(_) do
+  defp response(:post, _) do
     {:ok, %HTTPoison.Response{status_code: 201, body: Jason.encode!(%{sample: "post response"})}}
   end
 
