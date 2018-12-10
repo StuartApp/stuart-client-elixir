@@ -50,6 +50,10 @@ defmodule StuartClientElixir.HttpClient do
     %{status_code: status_code, body: Jason.decode!(body)}
   end
 
+  defp to_api_response({:error, %HTTPoison.Error{} = error}) do
+    {:error, error}
+  end
+
   defp to_api_response({:error, %OAuth2.Response{status_code: status_code, body: body}}) do
     %{status_code: status_code, body: body}
   end
