@@ -26,14 +26,8 @@ defmodule StuartClientElixirTest.HttpClientTest do
       HTTPoison,
       [],
       [
-        get: fn _, _ ->
-          {:ok,
-           %HTTPoison.Response{status_code: 201, body: Jason.encode!(%{sample: "get response"})}}
-        end,
-        post: fn _, _, _ ->
-          {:ok,
-           %HTTPoison.Response{status_code: 201, body: Jason.encode!(%{sample: "post response"})}}
-        end
+        get: fn url, _ -> response(:get, url) end,
+        post: fn url, _, _ -> response(:post, url) end
       ]
     }
   ]) do
@@ -59,6 +53,12 @@ defmodule StuartClientElixirTest.HttpClientTest do
 
       assert HttpClient.get("/sample-endpoint", config(@bad_credentials)) == expected_response
     end
+
+    test "returns explicit error when GET request fails" do
+      expected_response = {:error, %HTTPoison.Error{id: nil, reason: :timeout}}
+
+      assert HttpClient.get("/timeout", config()) == expected_response
+    end
   end
 
   describe "post" do
@@ -83,11 +83,33 @@ defmodule StuartClientElixirTest.HttpClientTest do
       assert HttpClient.post("/sample-endpoint", sample_request_body(), config(@bad_credentials)) ==
                expected_response
     end
+
+    test "returns explicit error when POST request fails" do
+      expected_response = {:error, %HTTPoison.Error{id: nil, reason: :timeout}}
+
+      assert HttpClient.post("/timeout", sample_request_body(), config()) == expected_response
+    end
   end
 
   #####################
   # Private functions #
   #####################
+
+  defp response(:get, "https://sandbox-api.stuart.com/timeout") do
+    {:error, %HTTPoison.Error{id: nil, reason: :timeout}}
+  end
+
+  defp response(:get, _) do
+    {:ok, %HTTPoison.Response{status_code: 201, body: Jason.encode!(%{sample: "get response"})}}
+  end
+
+  defp response(:post, "https://sandbox-api.stuart.com/timeout") do
+    {:error, %HTTPoison.Error{id: nil, reason: :timeout}}
+  end
+
+  defp response(:post, _) do
+    {:ok, %HTTPoison.Response{status_code: 201, body: Jason.encode!(%{sample: "post response"})}}
+  end
 
   defp authenticator_response(@good_credentials) do
     {:ok, "sample-access-token"}
