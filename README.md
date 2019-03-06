@@ -1,3 +1,5 @@
+[ ![Codeship Status for StuartApp/stuart-client-elixir](https://app.codeship.com/projects/832b17c0-77a6-0136-8b5b-3e7b2f9f0830/status?branch=master)](https://app.codeship.com/projects/300202)
+
 # Stuart Elixir Client
 
 For a complete documentation of all endpoints offered by the Stuart API, you can read the [Stuart API documentation](https://stuart.api-docs.io).
@@ -68,7 +70,7 @@ job = %{
     ]
   }
 }
-credentials = %Credentials{client_id: "...", client_secret: "..."}
 
+credentials = %Credentials{client_id: "...", client_secret: "..."}
 StuartClientElixir.post("/v2/jobs", Jason.encode!(job), %{environment: Environment.sandbox(), credentials: credentials})
 ```
