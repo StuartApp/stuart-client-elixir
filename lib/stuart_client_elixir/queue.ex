@@ -1,4 +1,4 @@
-defmodule StuartClientElixir.Infrastructure.Queue do
+defmodule StuartClientElixir.Queue do
   use GenServer
 
   def start_link() do
@@ -13,9 +13,13 @@ defmodule StuartClientElixir.Infrastructure.Queue do
 
   def unqueue(), do: GenServer.call(:stuart_queue, :unqueue)
 
-  # callbacks
+  #############
+  # Callbacks #
+  #############
+
   def handle_call(:unqueue, _from, queue) do
     {item, q} = :queue.out(queue)
+
     case item do
       {:value, value} -> {:reply, value, q}
       :empty -> {:reply, nil, q}

@@ -1,7 +1,7 @@
-defmodule StuartClientElixirTest.Infrastructure.QueueTest do
+defmodule StuartClientElixirTest.QueueTest do
   use ExUnit.Case
 
-  alias StuartClientElixir.Infrastructure.Queue
+  alias StuartClientElixir.Queue
 
   test "unqueue on an empty queue should return nil" do
     assert nil == Queue.unqueue()
