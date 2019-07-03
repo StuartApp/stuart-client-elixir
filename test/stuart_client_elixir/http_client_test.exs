@@ -26,8 +26,8 @@ defmodule StuartClientElixirTest.HttpClientTest do
       HTTPoison,
       [],
       [
-        get: fn url, _ -> response(:get, url) end,
-        post: fn url, _, _ -> response(:post, url) end
+        get: fn url, _, _ -> response(:get, url) end,
+        post: fn url, _, _, _ -> response(:post, url) end
       ]
     }
   ]) do
@@ -43,7 +43,8 @@ defmodule StuartClientElixirTest.HttpClientTest do
       assert called(
                HTTPoison.get(
                  "https://sandbox-api.stuart.com/sample-endpoint",
-                 expected_headers()
+                 expected_headers(),
+                 expected_options()
                )
              )
     end
@@ -72,7 +73,8 @@ defmodule StuartClientElixirTest.HttpClientTest do
                HTTPoison.post(
                  "https://sandbox-api.stuart.com/sample-endpoint",
                  sample_request_body(),
-                 expected_headers()
+                 expected_headers(),
+                 expected_options()
                )
              )
     end
@@ -127,6 +129,9 @@ defmodule StuartClientElixirTest.HttpClientTest do
       "User-Agent": "stuart-client-elixir/#{Mix.Project.config()[:version]}",
       "Content-Type": "application/json"
     ]
+
+  defp expected_options,
+    do: [recv_timeout: 10_000]
 
   defp config(credentials \\ @good_credentials),
     do: %{
