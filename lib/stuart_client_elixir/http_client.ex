@@ -14,7 +14,7 @@ defmodule StuartClientElixir.HttpClient do
     with url <- url(resource, environment),
          {:ok, access_token} <- Authenticator.access_token(environment, credentials),
          headers <- default_headers(access_token) do
-      HTTPoison.get(url, headers)
+      HTTPoison.get(url, headers, default_options())
       |> to_api_response()
     else
       {:error, %OAuth2.Response{}} = oauth_error -> to_api_response(oauth_error)
@@ -25,7 +25,7 @@ defmodule StuartClientElixir.HttpClient do
     with url <- url(resource, environment),
          {:ok, access_token} <- Authenticator.access_token(environment, credentials),
          headers <- default_headers(access_token) do
-      HTTPoison.post(url, body, headers)
+      HTTPoison.post(url, body, headers, default_options())
       |> to_api_response()
     else
       {:error, %OAuth2.Response{}} = oauth_error -> to_api_response(oauth_error)
@@ -35,6 +35,10 @@ defmodule StuartClientElixir.HttpClient do
   #####################
   # Private functions #
   #####################
+
+  defp default_options do
+    [recv_timeout: 10_000]
+  end
 
   defp url(resource, %Environment{base_url: base_url}), do: "#{base_url}#{resource}"
 
