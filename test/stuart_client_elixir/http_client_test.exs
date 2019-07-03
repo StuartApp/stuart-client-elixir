@@ -26,8 +26,8 @@ defmodule StuartClientElixirTest.HttpClientTest do
       HTTPoison,
       [],
       [
-        get: fn url, _, _ -> response(:get, url) end,
-        post: fn url, _, _, _ -> response(:post, url) end
+        get: fn url, _headers, _options -> response(:get, url) end,
+        post: fn url, _body, _headers, _options -> response(:post, url) end
       ]
     }
   ]) do
