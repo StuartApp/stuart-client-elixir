@@ -43,6 +43,17 @@ defmodule StuartClientElixirTest.AuthenticatorTest do
                 }}
     end
 
+    test "returns an error for OAuth2.Error" do
+      assert Authenticator.access_token(Environment.sandbox(), error_credentials()) ==
+               {:error,
+                %OAuth2.Error{
+                  reason:
+                    {:options,
+                     {:socket_options,
+                      [packet_size: 0, packet: 0, header: 0, active: false, mode: :binary]}}
+                }}
+    end
+
     test "returns a new access token when no access token exists" do
       # when
       {:ok, access_token} = Authenticator.access_token(Environment.sandbox(), good_credentials())
@@ -121,6 +132,10 @@ defmodule StuartClientElixirTest.AuthenticatorTest do
     %Credentials{client_id: "client-id", client_secret: "bad"}
   end
 
+  defp error_credentials do
+    %Credentials{client_id: "client-id", client_secret: "error"}
+  end
+
   defp sample_client(
          strategy: OAuth2.Strategy.ClientCredentials,
          client_id: client_id,
@@ -161,6 +176,15 @@ defmodule StuartClientElixirTest.AuthenticatorTest do
        },
        headers: [],
        status_code: 401
+     }}
+  end
+
+  defp get_token_response(%OAuth2.Client{client_secret: "error"}) do
+    {:error,
+     %OAuth2.Error{
+       reason:
+         {:options,
+          {:socket_options, [packet_size: 0, packet: 0, header: 0, active: false, mode: :binary]}}
      }}
   end
 

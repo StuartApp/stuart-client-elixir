@@ -14,6 +14,11 @@ defmodule StuartClientElixirTest.HttpClientTest do
     client_secret: "bad-secret"
   }
 
+  @oauth_error %Credentials{
+    client_id: "oauth-error",
+    client_secret: "oauth-error"
+  }
+
   setup_with_mocks([
     {
       Authenticator,
@@ -49,10 +54,17 @@ defmodule StuartClientElixirTest.HttpClientTest do
              )
     end
 
-    test "returns explicit error when authentication fails" do
+    test "returns explicit error when authentication fails because of bad credentials" do
       expected_response = %{body: %{"error" => "Bad credentials"}, status_code: 401}
 
       assert HttpClient.get("/sample-endpoint", config(@bad_credentials)) == expected_response
+    end
+
+    test "returns explicit error when authentication fails because of other OAuth error" do
+      expected_response = {:error, oauth2_error()}
+
+      assert HttpClient.get("/sample-endpoint", config(@oauth_error)) ==
+               expected_response
     end
 
     test "returns explicit error when GET request fails" do
@@ -79,10 +91,17 @@ defmodule StuartClientElixirTest.HttpClientTest do
              )
     end
 
-    test "returns explicit error when authentication fails" do
+    test "returns explicit error when authentication fails because of bad credentials" do
       expected_response = %{body: %{"error" => "Bad credentials"}, status_code: 401}
 
       assert HttpClient.post("/sample-endpoint", sample_request_body(), config(@bad_credentials)) ==
+               expected_response
+    end
+
+    test "returns explicit error when authentication fails because of other OAuth error" do
+      expected_response = {:error, oauth2_error()}
+
+      assert HttpClient.post("/sample-endpoint", sample_request_body(), config(@oauth_error)) ==
                expected_response
     end
 
@@ -119,6 +138,18 @@ defmodule StuartClientElixirTest.HttpClientTest do
 
   defp authenticator_response(@bad_credentials) do
     {:error, %OAuth2.Response{status_code: 401, body: %{"error" => "Bad credentials"}}}
+  end
+
+  defp authenticator_response(@oauth_error) do
+    {:error, oauth2_error()}
+  end
+
+  defp oauth2_error do
+    %OAuth2.Error{
+      reason:
+        {:options,
+         {:socket_options, [packet_size: 0, packet: 0, header: 0, active: false, mode: :binary]}}
+    }
   end
 
   defp sample_request_body, do: Jason.encode!(%{sample: "request"})
