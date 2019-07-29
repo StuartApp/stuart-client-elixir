@@ -9,10 +9,6 @@ For a complete documentation of all endpoints offered by the Stuart API, you can
 ```elixir
 # mix.exs
 
-def application do
-  [applications: [:stuart_client_elixir]]
-end
-
 def deps do
   [
     {:stuart_client_elixir, "~> 1.2.0"}
