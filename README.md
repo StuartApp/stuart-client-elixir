@@ -70,3 +70,44 @@ job = %{
 credentials = %Credentials{client_id: "...", client_secret: "..."}
 StuartClientElixir.post("/v2/jobs", Jason.encode!(job), %{environment: Environment.sandbox(), credentials: credentials})
 ```
+
+#### Send a PATCH request to the Stuart API
+
+```elixir
+alias StuartClientElixir.{Environment, Credentials}
+
+job = %{
+  job: %{
+    deliveries: [
+      %{
+        id: "43035",
+        client_reference: "new_client_reference",
+        package_description: "new_package_description",
+        pickup: %{
+          comment: "new_comment",
+          contact: %{
+            firstname: "new_firstname",
+            lastname: "new_lastname",
+            phone: "+33628046091",
+            email: "sd@df.com",
+            company: "new_company"
+          }
+        },
+        dropoff: %{
+          comment: "new_comment",
+          contact: %{
+            firstname: "new_firstname",
+            lastname: "new_lastname",
+            phone: "+33628046095",
+            email: "new_email@mymail.com",
+            company: "new_company"
+          }
+        }
+      }
+    ]
+  }
+}
+
+credentials = %Credentials{client_id: "...", client_secret: "..."}
+StuartClientElixir.patch("/v2/jobs/1234", Jason.encode!(job), %{environment: Environment.sandbox(), credentials: credentials})
+```

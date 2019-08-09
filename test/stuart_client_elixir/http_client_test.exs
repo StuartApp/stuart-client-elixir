@@ -32,7 +32,8 @@ defmodule StuartClientElixirTest.HttpClientTest do
       [],
       [
         get: fn url, _headers, _options -> response(:get, url) end,
-        post: fn url, _body, _headers, _options -> response(:post, url) end
+        post: fn url, _body, _headers, _options -> response(:post, url) end,
+        patch: fn url, _body, _headers, _options -> response(:patch, url) end
       ]
     }
   ]) do
@@ -41,7 +42,7 @@ defmodule StuartClientElixirTest.HttpClientTest do
 
   describe "get" do
     test "calls HTTPoison with correct parameters" do
-      expected_response = %{body: %{"sample" => "get response"}, status_code: 201}
+      expected_response = %{body: %{"sample" => "get response"}, status_code: 200}
 
       assert HttpClient.get("/sample-endpoint", config()) == expected_response
 
@@ -63,8 +64,7 @@ defmodule StuartClientElixirTest.HttpClientTest do
     test "returns explicit error when authentication fails because of other OAuth error" do
       expected_response = {:error, oauth2_error()}
 
-      assert HttpClient.get("/sample-endpoint", config(@oauth_error)) ==
-               expected_response
+      assert HttpClient.get("/sample-endpoint", config(@oauth_error)) == expected_response
     end
 
     test "returns explicit error when GET request fails" do
@@ -112,24 +112,62 @@ defmodule StuartClientElixirTest.HttpClientTest do
     end
   end
 
+  describe "patch" do
+    test "calls HTTPoison with correct parameters" do
+      expected_response = %{body: %{"sample" => "patch response"}, status_code: 200}
+
+      assert HttpClient.patch("/sample-endpoint", sample_request_body(), config()) ==
+               expected_response
+
+      assert called(
+               HTTPoison.patch(
+                 "https://sandbox-api.stuart.com/sample-endpoint",
+                 sample_request_body(),
+                 expected_headers(),
+                 expected_options()
+               )
+             )
+    end
+
+    test "returns explicit error when authentication fails because of bad credentials" do
+      expected_response = %{body: %{"error" => "Bad credentials"}, status_code: 401}
+
+      assert HttpClient.patch("/sample-endpoint", sample_request_body(), config(@bad_credentials)) ==
+               expected_response
+    end
+
+    test "returns explicit error when authentication fails because of other OAuth error" do
+      expected_response = {:error, oauth2_error()}
+
+      assert HttpClient.patch("/sample-endpoint", sample_request_body(), config(@oauth_error)) ==
+               expected_response
+    end
+
+    test "returns explicit error when PATCH request fails" do
+      expected_response = {:error, %HTTPoison.Error{id: nil, reason: :timeout}}
+
+      assert HttpClient.patch("/timeout", sample_request_body(), config()) == expected_response
+    end
+  end
+
   #####################
   # Private functions #
   #####################
 
-  defp response(:get, "https://sandbox-api.stuart.com/timeout") do
+  defp response(_, "https://sandbox-api.stuart.com/timeout") do
     {:error, %HTTPoison.Error{id: nil, reason: :timeout}}
   end
 
   defp response(:get, _) do
-    {:ok, %HTTPoison.Response{status_code: 201, body: Jason.encode!(%{sample: "get response"})}}
-  end
-
-  defp response(:post, "https://sandbox-api.stuart.com/timeout") do
-    {:error, %HTTPoison.Error{id: nil, reason: :timeout}}
+    {:ok, %HTTPoison.Response{status_code: 200, body: Jason.encode!(%{sample: "get response"})}}
   end
 
   defp response(:post, _) do
     {:ok, %HTTPoison.Response{status_code: 201, body: Jason.encode!(%{sample: "post response"})}}
+  end
+
+  defp response(:patch, _) do
+    {:ok, %HTTPoison.Response{status_code: 200, body: Jason.encode!(%{sample: "patch response"})}}
   end
 
   defp authenticator_response(@good_credentials) do

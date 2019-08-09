@@ -9,34 +9,48 @@ defmodule StuartClientElixir.HttpClient do
 
   @callback get(url, options) :: ok_response | error_response
   @callback post(url, body, options) :: ok_response | error_response
+  @callback patch(url, body, options) :: ok_response | error_response
 
-  def get(resource, %{environment: environment, credentials: credentials}) do
-    with url <- url(resource, environment),
-         {:ok, access_token} <- Authenticator.access_token(environment, credentials),
-         headers <- default_headers(access_token) do
-      HTTPoison.get(url, headers, default_options())
-      |> to_api_response()
-    else
-      {:error, %OAuth2.Response{}} = oauth_response -> to_api_response(oauth_response)
-      {:error, %OAuth2.Error{}} = oauth_error -> to_api_response(oauth_error)
-    end
+  def get(resource, options) do
+    perform_request(:get, options, resource)
   end
 
-  def post(resource, body, %{environment: environment, credentials: credentials}) do
-    with url <- url(resource, environment),
-         {:ok, access_token} <- Authenticator.access_token(environment, credentials),
-         headers <- default_headers(access_token) do
-      HTTPoison.post(url, body, headers, default_options())
-      |> to_api_response()
-    else
-      {:error, %OAuth2.Response{}} = oauth_response -> to_api_response(oauth_response)
-      {:error, %OAuth2.Error{}} = oauth_error -> to_api_response(oauth_error)
-    end
+  def post(resource, body, options) do
+    perform_request(:post, options, resource, body)
+  end
+
+  def patch(resource, body, options) do
+    perform_request(:patch, options, resource, body)
   end
 
   #####################
   # Private functions #
   #####################
+
+  def perform_request(
+        method,
+        %{
+          environment: environment,
+          credentials: credentials
+        },
+        resource,
+        body \\ nil
+      )
+      when method in [:get, :post, :patch] do
+    with url <- url(resource, environment),
+         {:ok, access_token} <- Authenticator.access_token(environment, credentials),
+         headers <- default_headers(access_token) do
+      case method do
+        :get -> HTTPoison.get(url, headers, default_options())
+        :post -> HTTPoison.post(url, body, headers, default_options())
+        :patch -> HTTPoison.patch(url, body, headers, default_options())
+      end
+      |> to_api_response()
+    else
+      {:error, %OAuth2.Response{}} = oauth_response -> to_api_response(oauth_response)
+      {:error, %OAuth2.Error{}} = oauth_error -> to_api_response(oauth_error)
+    end
+  end
 
   defp default_options do
     [recv_timeout: 10_000]
