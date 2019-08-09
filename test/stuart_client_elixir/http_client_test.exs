@@ -154,7 +154,9 @@ defmodule StuartClientElixirTest.HttpClientTest do
   # Private functions #
   #####################
 
-  defp response(_, "https://sandbox-api.stuart.com/timeout") do
+  @timeout_url "https://sandbox-api.stuart.com/timeout"
+
+  defp response(_, @timeout_url) do
     {:error, %HTTPoison.Error{id: nil, reason: :timeout}}
   end
 
