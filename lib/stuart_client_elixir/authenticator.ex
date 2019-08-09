@@ -33,6 +33,7 @@ defmodule StuartClientElixir.Authenticator do
       {:ok, access_token}
     else
       {:error, %OAuth2.Response{} = oauth_response} -> {:error, oauth_response}
+      {:error, %OAuth2.Error{} = oauth_error} -> {:error, oauth_error}
     end
   end
 
