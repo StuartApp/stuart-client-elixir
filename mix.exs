@@ -12,7 +12,7 @@ defmodule StuartClientElixir.MixProject do
         }
       },
       version: "1.2.0",
-      elixir: "~> 1.7",
+      elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
