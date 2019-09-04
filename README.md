@@ -1,4 +1,4 @@
-[ ![Codeship Status for StuartApp/stuart-client-elixir](https://app.codeship.com/projects/832b17c0-77a6-0136-8b5b-3e7b2f9f0830/status?branch=master)](https://app.codeship.com/projects/300202)
+[![Codeship Status for StuartApp/stuart-client-elixir](https://app.codeship.com/projects/f9859ab0-b145-0137-da11-3e6824a8821c/status?branch=master)](https://app.codeship.com/projects/363007)
 
 # Stuart Elixir Client
 
