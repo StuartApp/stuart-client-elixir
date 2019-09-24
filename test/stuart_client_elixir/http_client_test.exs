@@ -150,14 +150,37 @@ defmodule StuartClientElixirTest.HttpClientTest do
     end
   end
 
+  describe "handles 204 no content response" do
+    @expected_no_content_response %{status_code: 204, body: ""}
+
+    test "204 no content in GET" do
+      assert HttpClient.get("/no_content", config()) == @expected_no_content_response
+    end
+
+    test "204 no content in POST" do
+      assert HttpClient.post("/no_content", sample_request_body(), config()) ==
+               @expected_no_content_response
+    end
+
+    test "204 no content in PATCH" do
+      assert HttpClient.patch("/no_content", sample_request_body(), config()) ==
+               @expected_no_content_response
+    end
+  end
+
   #####################
   # Private functions #
   #####################
 
   @timeout_url "https://sandbox-api.stuart.com/timeout"
+  @no_content_url "https://sandbox-api.stuart.com/no_content"
 
   defp response(_, @timeout_url) do
     {:error, %HTTPoison.Error{id: nil, reason: :timeout}}
+  end
+
+  defp response(_, @no_content_url) do
+    {:ok, %HTTPoison.Response{status_code: 204, body: ""}}
   end
 
   defp response(:get, _) do
