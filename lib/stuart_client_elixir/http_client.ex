@@ -66,6 +66,10 @@ defmodule StuartClientElixir.HttpClient do
     ]
   end
 
+  defp to_api_response({:ok, %HTTPoison.Response{status_code: 204}}) do
+    %{status_code: 204, body: ""}
+  end
+
   defp to_api_response({:ok, %HTTPoison.Response{status_code: status_code, body: body}}) do
     %{status_code: status_code, body: Jason.decode!(body)}
   end
