@@ -168,12 +168,29 @@ defmodule StuartClientElixirTest.HttpClientTest do
     end
   end
 
+  describe "handles invalid json response" do
+    @expected_invalid_json_response {:error, %Jason.DecodeError{data: "", position: 0, token: nil}}
+
+    test "invalid json in GET" do
+      assert HttpClient.get("/invalid_json", config()) == @expected_invalid_json_response
+    end
+
+    test "invalid json in POST" do
+      assert HttpClient.post("/invalid_json", sample_request_body(), config()) == @expected_invalid_json_response
+    end
+
+    test "invalid json in PATCH" do
+      assert HttpClient.patch("/invalid_json", sample_request_body(), config()) == @expected_invalid_json_response
+    end
+  end
+
   #####################
   # Private functions #
   #####################
 
   @timeout_url "https://sandbox-api.stuart.com/timeout"
   @no_content_url "https://sandbox-api.stuart.com/no_content"
+  @invalid_json_url "https://sandbox-api.stuart.com/invalid_json"
 
   defp response(_, @timeout_url) do
     {:error, %HTTPoison.Error{id: nil, reason: :timeout}}
@@ -181,6 +198,10 @@ defmodule StuartClientElixirTest.HttpClientTest do
 
   defp response(_, @no_content_url) do
     {:ok, %HTTPoison.Response{status_code: 204, body: ""}}
+  end
+
+  defp response(_, @invalid_json_url) do
+    {:ok, %HTTPoison.Response{status_code: 500, body: ""}}
   end
 
   defp response(:get, _) do

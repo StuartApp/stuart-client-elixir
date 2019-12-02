@@ -71,7 +71,12 @@ defmodule StuartClientElixir.HttpClient do
   end
 
   defp to_api_response({:ok, %HTTPoison.Response{status_code: status_code, body: body}}) do
-    %{status_code: status_code, body: Jason.decode!(body)}
+    with {:ok, decoded_body} <- Jason.decode(body) do
+      %{status_code: status_code, body: decoded_body}
+    else
+      error ->
+        error
+    end
   end
 
   defp to_api_response({:error, %OAuth2.Response{status_code: status_code, body: body}}) do
