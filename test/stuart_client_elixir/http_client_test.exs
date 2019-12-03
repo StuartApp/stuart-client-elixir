@@ -169,18 +169,21 @@ defmodule StuartClientElixirTest.HttpClientTest do
   end
 
   describe "handles invalid json response" do
-    @expected_invalid_json_response {:error, %Jason.DecodeError{data: "", position: 0, token: nil}}
+    @expected_invalid_json_response {:error,
+                                     %Jason.DecodeError{data: "", position: 0, token: nil}}
 
     test "invalid json in GET" do
       assert HttpClient.get("/invalid_json", config()) == @expected_invalid_json_response
     end
 
     test "invalid json in POST" do
-      assert HttpClient.post("/invalid_json", sample_request_body(), config()) == @expected_invalid_json_response
+      assert HttpClient.post("/invalid_json", sample_request_body(), config()) ==
+               @expected_invalid_json_response
     end
 
     test "invalid json in PATCH" do
-      assert HttpClient.patch("/invalid_json", sample_request_body(), config()) == @expected_invalid_json_response
+      assert HttpClient.patch("/invalid_json", sample_request_body(), config()) ==
+               @expected_invalid_json_response
     end
   end
 
