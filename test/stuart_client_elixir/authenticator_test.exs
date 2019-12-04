@@ -19,6 +19,9 @@ defmodule StuartClientElixirTest.AuthenticatorTest do
         new: fn oauth_params ->
           sample_client(oauth_params)
         end,
+        put_serializer: fn oauth_client, content_type, serializer ->
+          client_with_serializer(oauth_client, content_type, serializer)
+        end,
         get_token: fn oauth_client ->
           get_token_response(oauth_client)
         end
@@ -156,6 +159,10 @@ defmodule StuartClientElixirTest.AuthenticatorTest do
       token_method: :post,
       token_url: "/oauth/token"
     }
+  end
+
+  defp client_with_serializer(oauth_client, content_type, serializer) do
+    %{oauth_client | serializers: %{content_type => serializer}}
   end
 
   defp get_token_response(%OAuth2.Client{client_secret: "client-secret"}) do
