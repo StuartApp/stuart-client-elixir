@@ -48,6 +48,7 @@ defmodule StuartClientElixir.Authenticator do
       client_secret: client_secret,
       site: site
     )
+    |> OAuth2.Client.put_serializer("application/json", Jason)
   end
 
   defp cache_exists?(%Credentials{client_id: client_id}),
