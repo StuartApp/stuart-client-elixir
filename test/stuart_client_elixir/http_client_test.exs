@@ -48,7 +48,7 @@ defmodule StuartClientElixirTest.HttpClientTest do
 
       assert called(
                HTTPoison.get(
-                 "https://sandbox-api.stuart.com/sample-endpoint",
+                 "https://api.sandbox.stuart.com/sample-endpoint",
                  expected_headers(),
                  expected_options()
                )
@@ -83,7 +83,7 @@ defmodule StuartClientElixirTest.HttpClientTest do
 
       assert called(
                HTTPoison.post(
-                 "https://sandbox-api.stuart.com/sample-endpoint",
+                 "https://api.sandbox.stuart.com/sample-endpoint",
                  sample_request_body(),
                  expected_headers(),
                  expected_options()
@@ -121,7 +121,7 @@ defmodule StuartClientElixirTest.HttpClientTest do
 
       assert called(
                HTTPoison.patch(
-                 "https://sandbox-api.stuart.com/sample-endpoint",
+                 "https://api.sandbox.stuart.com/sample-endpoint",
                  sample_request_body(),
                  expected_headers(),
                  expected_options()
@@ -191,9 +191,9 @@ defmodule StuartClientElixirTest.HttpClientTest do
   # Private functions #
   #####################
 
-  @timeout_url "https://sandbox-api.stuart.com/timeout"
-  @no_content_url "https://sandbox-api.stuart.com/no_content"
-  @invalid_json_url "https://sandbox-api.stuart.com/invalid_json"
+  @timeout_url "https://api.sandbox.stuart.com/timeout"
+  @no_content_url "https://api.sandbox.stuart.com/no_content"
+  @invalid_json_url "https://api.sandbox.stuart.com/invalid_json"
 
   defp response(_, @timeout_url) do
     {:error, %HTTPoison.Error{id: nil, reason: :timeout}}

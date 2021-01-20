@@ -216,7 +216,7 @@ defmodule StuartClientElixirTest.AuthenticatorTest do
       ref: nil,
       request_opts: [],
       token: sample_token(access_token: access_token, expires_at: expires_at),
-      site: "https://sandbox-api.stuart.com",
+      site: "https://api.sandbox.stuart.com",
       strategy: OAuth2.Strategy.ClientCredentials,
       token_method: :post,
       token_url: "/oauth/token"
