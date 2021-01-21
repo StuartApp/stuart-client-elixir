@@ -25,8 +25,8 @@ defmodule StuartClientElixirTest.QueueTest do
     Queue.enqueue(:second)
 
     # when
-    first = Queue.unqueue
-    second = Queue.unqueue
+    first = Queue.unqueue()
+    second = Queue.unqueue()
 
     # then
     assert first == :first

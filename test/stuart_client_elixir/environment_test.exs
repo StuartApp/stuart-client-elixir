@@ -4,7 +4,7 @@ defmodule StuartClientElixirTest.EnvironmentTest do
   alias StuartClientElixir.Environment
 
   test "sandbox" do
-    assert Environment.sandbox() == %Environment{base_url: "https://sandbox-api.stuart.com"}
+    assert Environment.sandbox() == %Environment{base_url: "https://api.sandbox.stuart.com"}
   end
 
   test "production" do

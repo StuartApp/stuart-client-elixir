@@ -19,6 +19,9 @@ defmodule StuartClientElixirTest.AuthenticatorTest do
         new: fn oauth_params ->
           sample_client(oauth_params)
         end,
+        put_serializer: fn oauth_client, content_type, serializer ->
+          client_with_serializer(oauth_client, content_type, serializer)
+        end,
         get_token: fn oauth_client ->
           get_token_response(oauth_client)
         end
@@ -40,6 +43,17 @@ defmodule StuartClientElixirTest.AuthenticatorTest do
                       "Client authentication failed due to unknown client, no client authentication included, or unsupported authentication method."
                   },
                   status_code: 401
+                }}
+    end
+
+    test "returns an error for OAuth2.Error" do
+      assert Authenticator.access_token(Environment.sandbox(), error_credentials()) ==
+               {:error,
+                %OAuth2.Error{
+                  reason:
+                    {:options,
+                     {:socket_options,
+                      [packet_size: 0, packet: 0, header: 0, active: false, mode: :binary]}}
                 }}
     end
 
@@ -121,6 +135,10 @@ defmodule StuartClientElixirTest.AuthenticatorTest do
     %Credentials{client_id: "client-id", client_secret: "bad"}
   end
 
+  defp error_credentials do
+    %Credentials{client_id: "client-id", client_secret: "error"}
+  end
+
   defp sample_client(
          strategy: OAuth2.Strategy.ClientCredentials,
          client_id: client_id,
@@ -143,6 +161,10 @@ defmodule StuartClientElixirTest.AuthenticatorTest do
     }
   end
 
+  defp client_with_serializer(oauth_client, content_type, serializer) do
+    %{oauth_client | serializers: %{content_type => serializer}}
+  end
+
   defp get_token_response(%OAuth2.Client{client_secret: "client-secret"}) do
     {:ok,
      sample_client_with_token(
@@ -161,6 +183,15 @@ defmodule StuartClientElixirTest.AuthenticatorTest do
        },
        headers: [],
        status_code: 401
+     }}
+  end
+
+  defp get_token_response(%OAuth2.Client{client_secret: "error"}) do
+    {:error,
+     %OAuth2.Error{
+       reason:
+         {:options,
+          {:socket_options, [packet_size: 0, packet: 0, header: 0, active: false, mode: :binary]}}
      }}
   end
 
@@ -185,7 +216,7 @@ defmodule StuartClientElixirTest.AuthenticatorTest do
       ref: nil,
       request_opts: [],
       token: sample_token(access_token: access_token, expires_at: expires_at),
-      site: "https://sandbox-api.stuart.com",
+      site: "https://api.sandbox.stuart.com",
       strategy: OAuth2.Strategy.ClientCredentials,
       token_method: :post,
       token_url: "/oauth/token"
