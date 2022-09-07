@@ -2,7 +2,7 @@
 
 # Stuart Elixir Client
 
-For a complete documentation of all endpoints offered by the Stuart API, you can read the [Stuart API documentation](https://stuart.api-docs.io).
+For a complete documentation of all endpoints offered by the Stuart API, you can read the [Stuart API documentation](https://api-docs.stuart.com/).
 
 ## Install
 
