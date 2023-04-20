@@ -11,7 +11,7 @@ For a complete documentation of all endpoints offered by the Stuart API, you can
 
 def deps do
   [
-    {:stuart_client_elixir, "~> 1.3.0"}
+    {:stuart_client_elixir, "~> 1.3.1"}
   ]
 end
 ```

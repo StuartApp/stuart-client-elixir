@@ -53,7 +53,7 @@ defmodule StuartClientElixir.HttpClient do
   end
 
   defp default_options do
-    [recv_timeout: 10_000]
+    [recv_timeout: 60_000]
   end
 
   defp url(resource, %Environment{base_url: base_url}), do: "#{base_url}#{resource}"
