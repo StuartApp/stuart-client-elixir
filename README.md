@@ -1,21 +1,17 @@
-[ ![Codeship Status for StuartApp/stuart-client-elixir](https://app.codeship.com/projects/832b17c0-77a6-0136-8b5b-3e7b2f9f0830/status?branch=master)](https://app.codeship.com/projects/300202)
+[![Codeship Status for StuartApp/stuart-client-elixir](https://app.codeship.com/projects/f9859ab0-b145-0137-da11-3e6824a8821c/status?branch=develop)](https://app.codeship.com/projects/363007)
 
 # Stuart Elixir Client
 
-For a complete documentation of all endpoints offered by the Stuart API, you can read the [Stuart API documentation](https://stuart.api-docs.io).
+For a complete documentation of all endpoints offered by the Stuart API, you can read the [Stuart API documentation](https://api-docs.stuart.com/).
 
 ## Install
 
 ```elixir
 # mix.exs
 
-def application do
-  [applications: [:stuart_client_elixir]]
-end
-
 def deps do
   [
-    {:stuart_client_elixir, "~> 1.2.0"}
+    {:stuart_client_elixir, "~> 1.3.1"}
   ]
 end
 ```
@@ -73,4 +69,45 @@ job = %{
 
 credentials = %Credentials{client_id: "...", client_secret: "..."}
 StuartClientElixir.post("/v2/jobs", Jason.encode!(job), %{environment: Environment.sandbox(), credentials: credentials})
+```
+
+#### Send a PATCH request to the Stuart API
+
+```elixir
+alias StuartClientElixir.{Environment, Credentials}
+
+job = %{
+  job: %{
+    deliveries: [
+      %{
+        id: "43035",
+        client_reference: "new_client_reference",
+        package_description: "new_package_description",
+        pickup: %{
+          comment: "new_comment",
+          contact: %{
+            firstname: "new_firstname",
+            lastname: "new_lastname",
+            phone: "+33628046091",
+            email: "sd@df.com",
+            company: "new_company"
+          }
+        },
+        dropoff: %{
+          comment: "new_comment",
+          contact: %{
+            firstname: "new_firstname",
+            lastname: "new_lastname",
+            phone: "+33628046095",
+            email: "new_email@mymail.com",
+            company: "new_company"
+          }
+        }
+      }
+    ]
+  }
+}
+
+credentials = %Credentials{client_id: "...", client_secret: "..."}
+StuartClientElixir.patch("/v2/jobs/1234", Jason.encode!(job), %{environment: Environment.sandbox(), credentials: credentials})
 ```
